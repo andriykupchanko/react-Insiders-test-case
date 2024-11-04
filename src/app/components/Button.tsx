@@ -13,7 +13,7 @@ const Button: React.FC<ButtonProps> = ({
   label,
   isActive = false,
   isDisabled = false,
-  width = "auto",
+  width,
   onClick
 }) => {
   return (
@@ -21,7 +21,7 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       disabled={isDisabled}
       style={{ width }}
-      className={`p-2 rounded text-center transition-colors ${
+      className={`p-2 text-center transition-colors ${
         isDisabled
           ? "bg-gray-200 text-gray-400 cursor-not-allowed"
           : isActive

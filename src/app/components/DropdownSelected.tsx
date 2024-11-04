@@ -2,11 +2,10 @@
 "use client";
 
 import React, { useState } from "react";
-import DropdownElement from "./DropdownElement";
 
 type Option = {
-  id: number;
-  label: string;
+  name: string;
+  value: string;
 };
 
 type DropdownSelectedProps = {
@@ -19,21 +18,21 @@ const DropdownSelected: React.FC<DropdownSelectedProps> = ({
   width = "100%"
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const toggleOption = (id: number) => {
+  const toggleOption = (value: string) => {
     setSelectedOptions((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((optionId) => optionId !== id)
-        : [...prevSelected, id]
+      prevSelected.includes(value)
+        ? prevSelected.filter((optionValue) => optionValue !== value)
+        : [...prevSelected, value]
     );
   };
 
   const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchQuery.toLowerCase())
+    option.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -77,12 +76,21 @@ const DropdownSelected: React.FC<DropdownSelectedProps> = ({
           }}
         >
           {filteredOptions.map((option) => (
-            <DropdownElement
-              key={option.id}
-              label={option.label}
-              isSelected={selectedOptions.includes(option.id)}
-              onToggle={() => toggleOption(option.id)}
-            />
+            <div
+              key={option.value}
+              onClick={() => toggleOption(option.value)}
+              className={`p-2 cursor-pointer hover:bg-gray-100 ${
+                selectedOptions.includes(option.value) ? "bg-gray-200" : ""
+              }`}
+            >
+              <input
+                type="checkbox"
+                checked={selectedOptions.includes(option.value)}
+                readOnly
+                className="mr-2"
+              />
+              {option.name}
+            </div>
           ))}
         </div>
       )}
