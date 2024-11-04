@@ -1,4 +1,3 @@
-// src/components/Dropdown.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -9,10 +8,10 @@ type Option = {
 };
 
 type DropdownProps = {
-  options?: Option[]; // Робимо `options` необов'язковим для безпечної обробки
+  options?: Option[];
   width?: string;
   selectedValue: string;
-  onSelect: (value: string) => void;
+  onSelect: (value: string) => void; // Expecting a single string for selection
 };
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -23,7 +22,6 @@ const Dropdown: React.FC<DropdownProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Перевірка, чи є вибраний елемент у списку опцій
   const selectedOption = options.find(
     (option) => option.value === selectedValue
   );
@@ -39,7 +37,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 mt-2 w-full bg-white border border-gray-300 shadow-lg max-h-48 overflow-y-auto">
+        <div className="overflow-y-auto absolute z-10 mt-2 w-full bg-white border border-gray-300 shadow-lg max-h-48">
           {options.map((option) => (
             <div
               key={option.value}
