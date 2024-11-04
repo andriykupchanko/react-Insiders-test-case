@@ -1,4 +1,3 @@
-// src/components/DropdownSelected.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -11,24 +10,24 @@ type Option = {
 type DropdownSelectedProps = {
   options?: Option[];
   width?: string;
+  onSelect: (value: string) => void; // Додано проп onSelect
+  selectedValue: string; // Додано проп selectedValue
 };
 
 const DropdownSelected: React.FC<DropdownSelectedProps> = ({
   options = [],
-  width = "100%"
+  width = "100%",
+  onSelect, // Отримуємо onSelect з пропсів
+  selectedValue // Отримуємо selectedValue
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const toggleOption = (value: string) => {
-    setSelectedOptions((prevSelected) =>
-      prevSelected.includes(value)
-        ? prevSelected.filter((optionValue) => optionValue !== value)
-        : [...prevSelected, value]
-    );
+  const handleOptionSelect = (value: string) => {
+    onSelect(value); // Викликаємо onSelect з переданим значенням
+    setIsOpen(false); // Закриваємо дропдаун після вибору
   };
 
   const filteredOptions = options.filter((option) =>
@@ -38,7 +37,7 @@ const DropdownSelected: React.FC<DropdownSelectedProps> = ({
   return (
     <div className="relative" style={{ width }}>
       <div
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleDropdown}
         className={`w-full text-left p-2 border ${
           isOpen
             ? "border-l border-r border-b border-black"
@@ -48,8 +47,8 @@ const DropdownSelected: React.FC<DropdownSelectedProps> = ({
         <input
           type="text"
           placeholder={isOpen ? "Type to search..." : "Select departments"}
-          value={isOpen ? searchQuery : ""}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          value={selectedValue} // Відображаємо вибране значення
+          readOnly
           className="w-full bg-transparent outline-none placeholder-gray-500"
           onFocus={() => setIsOpen(true)}
         />
@@ -78,17 +77,9 @@ const DropdownSelected: React.FC<DropdownSelectedProps> = ({
           {filteredOptions.map((option) => (
             <div
               key={option.value}
-              onClick={() => toggleOption(option.value)}
-              className={`p-2 cursor-pointer hover:bg-gray-100 ${
-                selectedOptions.includes(option.value) ? "bg-gray-200" : ""
-              }`}
+              onClick={() => handleOptionSelect(option.value)} // Виклик для вибору опції
+              className="p-2 cursor-pointer hover:bg-gray-100"
             >
-              <input
-                type="checkbox"
-                checked={selectedOptions.includes(option.value)}
-                readOnly
-                className="mr-2"
-              />
               {option.name}
             </div>
           ))}
